@@ -11,11 +11,15 @@ export class PropertiesService {
     @InjectModel(Property.name)
     private readonly propertyModel: Model<Property>,
   ) {}
-  async findAllProperties() {
-    return this.propertyModel.find();
+  async findAllProperties(userId: string, role: string) {
+    return role === 'ADMIN'
+      ? this.propertyModel.find()
+      : this.propertyModel.find({ ownerId: userId });
   }
-  async findPropertyById(id: string) {
-    return this.propertyModel.findById(id);
+  async findPropertyById(id: string, userId: string, role: string) {
+    return role === 'ADMIN'
+      ? this.propertyModel.findById(id)
+      : this.propertyModel.findOne({ _id: id, ownerId: userId });
   }
   async createProperty(createPropertyDto: CreatePropertyDto, ownerId: string) {
     return this.propertyModel.create({ ...createPropertyDto, ownerId });
@@ -39,7 +43,7 @@ export class PropertiesService {
     }
     return property.save();
   }
-  async deleteProperty(id: string) {
-    return this.propertyModel.findByIdAndDelete(id);
+  async deleteProperty(id: string, ownerId: string) {
+    return this.propertyModel.findOneAndDelete({ _id: id, ownerId });
   }
 }
