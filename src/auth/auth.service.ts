@@ -10,6 +10,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
   async login(loginDto: LoginDto) {
+    console.log(loginDto);
     const user = await this.usersService.findByEmail(loginDto.email);
     if (!user) {
       throw new UnauthorizedException('Invalid email or password');
@@ -34,6 +35,7 @@ export class AuthService {
     const token = this.jwtService.sign(payload);
     return {
       access_token: token,
+      role: user.role,
     };
   }
 }

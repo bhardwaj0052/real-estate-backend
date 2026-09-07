@@ -17,8 +17,8 @@ export class PropertiesService {
   async findPropertyById(id: string) {
     return this.propertyModel.findById(id);
   }
-  async createProperty(createPropertyDto: CreatePropertyDto) {
-    return this.propertyModel.create(createPropertyDto);
+  async createProperty(createPropertyDto: CreatePropertyDto, ownerId: string) {
+    return this.propertyModel.create({ ...createPropertyDto, ownerId });
   }
   async updatePropertyStatus(
     id: string,
